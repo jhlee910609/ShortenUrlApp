@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ShortenUrlApp</string>
+    <string name="btn_shorten_txt">Do shorten URL!</string>
+    <string name="shorten_tv_txt">Input your URL</string>
+</resources>
