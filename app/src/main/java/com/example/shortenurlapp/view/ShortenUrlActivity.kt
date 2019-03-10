@@ -13,13 +13,12 @@ import com.example.shortenurlapp.viewmodel.ShortenUrlViewModel
 import com.example.shortenurlapp.viewmodel.ShortenUrlViewModelFactory
 import org.koin.android.ext.android.inject
 
-class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
-    override val layoutResId: Int = R.layout.activity_shorten_url
+class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>(){
+    override val layoutResourceId: Int = R.layout.activity_shorten_url
     private val shortenUrlViewModelFactory: ShortenUrlViewModelFactory by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_shorten_url)
 
         val shortenUrlViewModel =
             ViewModelProviders.of(this, shortenUrlViewModelFactory).get(ShortenUrlViewModel::class.java)
@@ -46,7 +45,8 @@ class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(clipUrl)))
         })
 
-        viewDataBinding.urlEditText.addValidator(shortenUrlViewModel.getUrlValidator(getString(R.string.error_validate_email)))
+        viewDataBinding.urlEditText.addValidator(shortenUrlViewModel.getUrlValidator(getString(R.string.error_validate_email
+        )))
 
         viewDataBinding.shortenUrlViewModel = shortenUrlViewModel
         viewDataBinding.setLifecycleOwner(this)

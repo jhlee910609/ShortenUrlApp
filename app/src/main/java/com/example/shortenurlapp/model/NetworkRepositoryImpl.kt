@@ -5,8 +5,10 @@ import io.reactivex.Single
 
 class NetworkRepositoryImpl(private val api: Api) : Repository {
 
-    override fun getShortenUrl(url: String): Single<ShortenUrl> = api.shortenUrl(url)
-        .map { response ->
-            response.result
-        }
+    override fun getShortenUrl(url: String): Single<ShortenUrl> {
+        return api.shorturl(url)
+            .map { shortenUrlResponse ->
+                shortenUrlResponse.result
+            }
+    }
 }

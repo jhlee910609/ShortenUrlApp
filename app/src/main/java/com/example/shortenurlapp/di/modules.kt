@@ -19,12 +19,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 val apiModules: Module = module {
     single {
         Retrofit.Builder()
-            .client(
-                OkHttpClient.Builder()
-                    .addInterceptor(get(headerInterceptor))
-                    .addInterceptor(get(loggingInterceptor))
-                    .build()
-            )
+            .client(OkHttpClient.Builder()
+                .addInterceptor(get(headerInterceptor))
+                .addInterceptor(get(loggingInterceptor))
+                .build())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(baseUrl)
@@ -35,8 +33,8 @@ val apiModules: Module = module {
     single(headerInterceptor) {
         Interceptor { chain ->
             val builder = chain.request().newBuilder().apply {
-                header("X-Naver-Client-Id", androidContext().resources.getString(R.string.naver_client_id))
-                header("X-Naver-Client-Secret", androidContext().resources.getString(R.string.naver_api_key))
+                header("X-Naver-Client-Id", androidContext().resources.getString(R.string.client_id))
+                header("X-Naver-Client-Secret", androidContext().resources.getString(R.string.client_secret))
             }
             chain.proceed(builder.build())
         }
