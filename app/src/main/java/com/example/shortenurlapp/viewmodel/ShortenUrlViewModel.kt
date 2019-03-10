@@ -17,6 +17,7 @@ class ShortenUrlViewModel(private val repo: Repository) : DisposableViewModel() 
     private val _clickCopyToClipboard = SingleLiveEvent<String>()
     private val _clickOpenWeb = SingleLiveEvent<String>()
     private val _clickConvert = SingleLiveEvent<Any>()
+    private val _clickDelete = SingleLiveEvent<Any>()
 
     val showResult = MutableLiveData<Boolean>()
 
@@ -26,6 +27,7 @@ class ShortenUrlViewModel(private val repo: Repository) : DisposableViewModel() 
     val clickCopyToClipboard: LiveData<String> get() = _clickCopyToClipboard
     val clickOpenWeb: LiveData<String> get() = _clickOpenWeb
     val clickConvert: LiveData<Any> get() = _clickConvert
+    val clickDelete: LiveData<Any> get() = _clickDelete
 
     fun getUrlValidator(errorMessage: String): METValidator {
         return RegexpValidator(errorMessage, Patterns.WEB_URL.pattern())
@@ -55,5 +57,9 @@ class ShortenUrlViewModel(private val repo: Repository) : DisposableViewModel() 
 
     fun clickOpenWeb() {
         _clickOpenWeb.value = _shortenUrl.value
+    }
+
+    fun clickDelete(){
+        _clickDelete.call()
     }
 }
