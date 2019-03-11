@@ -63,18 +63,6 @@ class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
             )
         )
 
-        shortenUrlViewModel.clickShare.observe(this, Observer {
-            var intent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-            }
-            intent.resolveActivity(packageManager)?.apply {
-                startActivity(Intent.createChooser(intent, getString(R.string.share_txt)))
-            }
-            mFirebase.logEvent("click_share", Bundle().apply {
-                putString("url", viewDataBinding.urlEditText.text.toString())
-            })
-        })
-
         viewDataBinding.shortenUrlViewModel = shortenUrlViewModel
         viewDataBinding.setLifecycleOwner(this)
         startService(Intent(applicationContext, ClipboardService::class.java))
