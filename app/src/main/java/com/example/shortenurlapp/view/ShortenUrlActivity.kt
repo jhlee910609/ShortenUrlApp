@@ -50,6 +50,7 @@ class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
 
         shortenUrlViewModel.clickDelete.observe(this, Observer {
             viewDataBinding.urlEditText.setText("", TextView.BufferType.EDITABLE)
+            shortenUrlViewModel.reset()
         })
 
         viewDataBinding.urlEditText.addValidator(

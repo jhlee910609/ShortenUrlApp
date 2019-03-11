@@ -47,6 +47,11 @@ class ShortenUrlViewModel(private val repo: Repository) : DisposableViewModel() 
         )
     }
 
+    fun reset(){
+        showResult.value = false
+        _shortenUrl.value = ""
+    }
+
     fun clickConvert() {
         _clickConvert.call()
     }
