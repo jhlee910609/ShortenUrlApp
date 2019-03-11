@@ -7,6 +7,7 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import com.android.danchookE.R
 import com.android.danchookE.view.ShortenUrlActivity
 
 
@@ -60,7 +61,7 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setAutoCancel(true) // 알림 터치시 반응 후 삭제
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setSmallIcon(android.R.drawable.btn_star)
+                .setSmallIcon(R.drawable.ic_small_noti)
                 .setContentIntent(pendingIntent)
             notiManager.notify(0, builder.build())
         }
