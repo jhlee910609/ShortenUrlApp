@@ -116,7 +116,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="@{shortenUrlViewModel.showResult ? View.VISIBLE : View.GONE}"
-                app:constraint_referenced_ids="btn_copy_to_clipboard,result_label,result_url, btn_share"
+                app:constraint_referenced_ids="btn_copy_to_clipboard,result_label,result_url"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="parent" app:layout_constraintBottom_toTopOf="parent"/>
 
@@ -128,15 +128,6 @@
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="36dp" android:layout_marginStart="16dp" android:textSize="24sp"
                 android:textStyle="bold" android:textColor="@color/colorBold"/>
-        <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp" app:srcCompat="@drawable/ic_baseline_share_24px"
-                android:id="@+id/btn_share" app:layout_constraintStart_toEndOf="@+id/btn_copy_to_clipboard"
-                app:layout_constraintTop_toTopOf="@+id/btn_copy_to_clipboard"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_copy_to_clipboard"
-                android:onClick="@{() -> shortenUrlViewModel.clickShare()}"
-                android:background="?attr/selectableItemBackground" android:padding="3dp"
-                app:layout_constraintVertical_bias="0.0" android:layout_marginStart="4dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

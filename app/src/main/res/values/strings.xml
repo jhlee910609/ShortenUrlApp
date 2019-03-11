@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">단축이</string>
     <string name="clip_label">클립보드 복사</string>
-    <string name="clipboard_copied">"단축URL: \"%s\"이 클립보드로 복사됐습니다.</string>
+    <string name="clipboard_copied">[ %s ]이 클립보드로 복사됐습니다.</string>
     <string name="enter_url">단축할 URL을 입력해주세요!</string>
     <string name="convert">단축 Url로 변환하기</string>
     <string name="converted_url">변환된 Url</string>
