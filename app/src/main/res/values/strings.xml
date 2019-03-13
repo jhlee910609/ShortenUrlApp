@@ -11,6 +11,7 @@
     <string name="btn_del">삭제</string>
     <string name="url_txt">주소</string>
     <string name="share_txt">URL 공유하기</string>
+    <string name="shorten_url_complete">URL 단축 완료</string>
 
     <string name="client_id">sliw7YAhoPSpADeM1Xhi</string>
     <string name="client_secret">TgAAsIpLw5</string>

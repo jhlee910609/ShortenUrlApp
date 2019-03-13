@@ -22,7 +22,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.junhee.danchooke.utils.ClipboardService">
+        <service android:name="com.junhee.danchooke.utils.ClipboardService"
+                 android:exported="false">
 
         </service>
 
