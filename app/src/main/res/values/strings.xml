@@ -3,15 +3,16 @@
     <string name="clip_label">클립보드 복사</string>
     <string name="clipboard_copied">[ %s ]이 클립보드로 복사됐습니다.</string>
     <string name="enter_url">단축할 URL을 입력해주세요!</string>
-    <string name="convert">단축 Url로 변환하기</string>
-    <string name="converted_url">변환된 Url</string>
+    <string name="convert">단축 URL 만들기</string>
+    <string name="converted_url">단축 URL</string>
     <string name="copy_to_clipboard">클립보드로 복사</string>
     <string name="open_web">브라우져 열기</string>
-    <string name="error_validate_email">옳바른 URL이 아닙니다.</string>
-    <string name="client_id">sliw7YAhoPSpADeM1Xhi</string>
-    <string name="client_secret">TgAAsIpLw5</string>
+    <string name="error_validate_email">주소를 정확히 입력해주세요.</string>
     <string name="btn_del">삭제</string>
     <string name="url_txt">주소</string>
     <string name="share_txt">URL 공유하기</string>
+
+    <string name="client_id">sliw7YAhoPSpADeM1Xhi</string>
+    <string name="client_secret">TgAAsIpLw5</string>
 </resources>
 
