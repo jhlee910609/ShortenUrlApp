@@ -1,5 +1,6 @@
 package com.junhee.danchooke.di
 
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.junhee.danchooke.model.NetworkRepositoryImpl
 import com.junhee.danchooke.model.Repository
 import com.junhee.danchooke.viewmodel.ShortenUrlViewModelFactory
@@ -13,5 +14,9 @@ val shortenUrlModules: Module = module {
 
     factory {
         ShortenUrlViewModelFactory(get())
+    }
+
+    single {
+        FirebaseAnalytics.getInstance(get())
     }
 }

@@ -5,12 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.google.firebase.analytics.FirebaseAnalytics
+import org.koin.android.ext.android.inject
 
 
 abstract class BaseActivity<T: ViewDataBinding>:  AppCompatActivity(){
 
     lateinit var viewDataBinding: T
-    lateinit var mFirebase : FirebaseAnalytics
+    val mFirebase : FirebaseAnalytics by inject()
 
     abstract val layoutResourceId: Int
 
@@ -18,6 +19,5 @@ abstract class BaseActivity<T: ViewDataBinding>:  AppCompatActivity(){
         super.onCreate(savedInstanceState)
 
         viewDataBinding = DataBindingUtil.setContentView(this, layoutResourceId)
-        mFirebase = FirebaseAnalytics.getInstance(this)
     }
 }

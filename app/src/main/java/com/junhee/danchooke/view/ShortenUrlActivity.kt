@@ -19,7 +19,6 @@ import org.koin.android.ext.android.inject
 
 class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
 
-    private val TAG = "ShortenUrlActivity"
     override val layoutResourceId: Int = R.layout.activity_shorten_url
     private val shortenUrlViewModelFactory: ShortenUrlViewModelFactory by inject()
     private val shortenUrlViewModel by lazy {
@@ -86,7 +85,7 @@ class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
 
     override fun onResume() {
         super.onResume()
-        if(isAppForground(this)){
+        if(isForground(this)){
             stopService(Intent(applicationContext, ClipboardService::class.java))
         }
     }
@@ -101,7 +100,7 @@ class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
         stopService(Intent(applicationContext, ClipboardService::class.java))
     }
 
-    fun isAppForground(context : Context) : Boolean {
+    fun isForground(context : Context) : Boolean {
         val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val tasks = manager.getRunningTasks(1)
         if(!tasks.isEmpty()){

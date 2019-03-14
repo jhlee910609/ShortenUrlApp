@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Danchooke(URL Shortener)</string>
+    <string name="clip_label">copy to clipboard</string>
+    <string name="clipboard_copied">[ %s ] copied at clipboard.</string>
+    <string name="enter_url">Please, Enter the full URL for shortening!</string>
+    <string name="convert">Shorten URL</string>
+    <string name="converted_url">Shortened URL</string>
+    <string name="error_validate_email">Please, Enter right URL.</string>
+    <string name="btn_del">Delete</string>
+    <string name="url_txt">Full URL</string>
+    <string name="shorten_url_complete">Shortening URL is completed!</string>
+    <string name="wait_txt">wating a moment...</string>
+
+    <string name="client_id">sliw7YAhoPSpADeM1Xhi</string>
+    <string name="client_secret">TgAAsIpLw5</string>
+</resources>

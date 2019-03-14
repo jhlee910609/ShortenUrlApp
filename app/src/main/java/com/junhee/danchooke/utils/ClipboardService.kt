@@ -5,9 +5,11 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
+import android.os.Bundle
 import android.os.IBinder
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.junhee.danchooke.R
 import com.junhee.danchooke.model.Repository
 import com.junhee.danchooke.view.ShortenUrlActivity
@@ -18,6 +20,7 @@ import org.koin.android.ext.android.inject
 
 class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListener {
 
+    private val mFirebase: FirebaseAnalytics by inject()
     private val repository: Repository by inject()
     private val channelId = 12312
     private val channelName = "danchooke"
@@ -41,11 +44,15 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
             .subscribe({
                 notifyChannel(it.url, url)
             }, {
-                Toast.makeText(applicationContext, it.message, Toast.LENGTH_SHORT).show()
             })
     }
 
     fun notifyChannel(shortenUrl: String, originUrl: String) {
+        Toast.makeText(
+            applicationContext,
+            getString(R.string.wait_txt),
+            Toast.LENGTH_LONG
+        ).show()
         val notiManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         // android O notification channel 대응 코드
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -57,8 +64,10 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
         }
 
         val builder = NotificationCompat.Builder(applicationContext, channelId.toString())
-        val notificationIntent = Intent(applicationContext, ShortenUrlActivity::class.java)
-            .putExtra(INTENT_KEY_URL, originUrl)
+        val notificationIntent = Intent(
+            applicationContext,
+            ShortenUrlActivity::class.java
+        ).putExtra(INTENT_KEY_URL, originUrl)
         notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         val requestID = System.currentTimeMillis().toInt()
         val pendingIntent = PendingIntent.getActivity(
@@ -68,23 +77,20 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        builder.setContentTitle(getString(R.string.shorten_url_complete)) // required
-            .setContentText(shortenUrl)  // required
+        builder.setContentTitle(getString(com.junhee.danchooke.R.string.shorten_url_complete)) // required
+            .setContentText(getString(R.string.clipboard_copied, shortenUrl))  // required
             .setDefaults(Notification.DEFAULT_ALL) // 알림, 사운드 진동 설정
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setAutoCancel(true) // 알림 터치시 반응 후 삭제
             .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-            .setSmallIcon(R.drawable.ic_small_noti)
+            .setSmallIcon(com.junhee.danchooke.R.drawable.ic_small_noti)
             .setContentIntent(pendingIntent)
-        notiManager.notify(0, builder.build())
-        copyToClipBoard(shortenUrl) {
-            Toast.makeText(
-                applicationContext,
-                getString(R.string.clipboard_copied, shortenUrl),
-                Toast.LENGTH_LONG
-            ).show()
-        }
 
+        notiManager.notify(0, builder.build())
+
+        copyToClipBoard(shortenUrl) {
+            mFirebase.logEvent("from_background", Bundle().apply { putString("url", originUrl) })
+        }
     }
 
     override fun onPrimaryClipChanged() {
