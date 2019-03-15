@@ -30,11 +30,15 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
 
     override fun onCreate() {
         super.onCreate()
-        mManager.addPrimaryClipChangedListener(this)
     }
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        mManager.addPrimaryClipChangedListener(this)
+        return super.onStartCommand(intent, flags, startId)
     }
 
     fun getShortenUrl(url: String) {
