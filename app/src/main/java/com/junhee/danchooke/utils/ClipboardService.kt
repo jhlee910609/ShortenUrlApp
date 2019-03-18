@@ -5,8 +5,12 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.view.Gravity
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -22,14 +26,8 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
 
     private val mFirebase: FirebaseAnalytics by inject()
     private val repository: Repository by inject()
-    private val channelId = 12312
-    private val channelName = "danchooke"
     val mManager: ClipboardManager by lazy {
         getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    }
-
-    override fun onCreate() {
-        super.onCreate()
     }
 
     override fun onBind(p0: Intent?): IBinder? {
@@ -37,8 +35,11 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        mManager.addPrimaryClipChangedListener(this)
-        return super.onStartCommand(intent, flags, startId)
+        if (INTENT_SERVICE_KEY.equals(intent?.action)) {
+            mManager.addPrimaryClipChangedListener(this)
+            startForegroundService()
+        }
+        return START_STICKY
     }
 
     fun getShortenUrl(url: String) {
@@ -51,23 +52,58 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
             })
     }
 
+    fun startForegroundService() {
+        val builder = NotificationCompat.Builder(this, "default")
+        builder.setSmallIcon(R.drawable.ic_small_noti)
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText(getString(R.string.background))
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    Intent(this, ShortenUrlActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    },
+                    0
+                )
+            )
+            .setChannelId(CHANNEL_ID.toString())
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(
+                NotificationChannel(
+                    ClipboardService.CHANNEL_ID.toString(),
+                    ClipboardService.CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+            )
+        }
+
+        startForeground(CHANNEL_ID, builder.build())
+    }
+
     fun notifyChannel(shortenUrl: String, originUrl: String) {
         Toast.makeText(
             applicationContext,
-            getString(R.string.wait_txt),
+            getString(R.string.clipboard_copied, shortenUrl),
             Toast.LENGTH_LONG
-        ).show()
+        ).apply {
+            val layout = view as LinearLayout
+            val tv = layout.getChildAt(0) as TextView
+            tv.gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
+        }.show()
         val notiManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         // android O notification channel 대응 코드
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_HIGH
             val mChannel = NotificationChannel(
-                channelId.toString(), channelName, importance
+                Companion.CHANNEL_ID.toString(), Companion.CHANNEL_NAME, importance
             )
             notiManager.createNotificationChannel(mChannel)
         }
 
-        val builder = NotificationCompat.Builder(applicationContext, channelId.toString())
+        val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID.toString())
         val notificationIntent = Intent(
             applicationContext,
             ShortenUrlActivity::class.java
@@ -90,7 +126,7 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
             .setSmallIcon(com.junhee.danchooke.R.drawable.ic_small_noti)
             .setContentIntent(pendingIntent)
 
-        notiManager.notify(0, builder.build())
+        notiManager.notify(CHANNEL_ID, builder.build())
 
         copyToClipBoard(shortenUrl) {
             mFirebase.logEvent("from_background", Bundle().apply { putString("url", originUrl) })
@@ -108,5 +144,12 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
     override fun onDestroy() {
         super.onDestroy()
         mManager.removePrimaryClipChangedListener(this)
+        stopForeground(true)
+    }
+
+    companion object {
+        const val CHANNEL_NAME = "danchooke"
+        const val CHANNEL_ID = 1234
+        const val INTENT_SERVICE_KEY = "clipboard_service_key"
     }
 }
