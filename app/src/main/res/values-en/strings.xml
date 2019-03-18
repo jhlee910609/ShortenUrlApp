@@ -10,7 +10,6 @@
     <string name="btn_del">Delete</string>
     <string name="url_txt">Full URL</string>
     <string name="shorten_url_complete">Shortening URL is completed!</string>
-    <string name="wait_txt">wating a moment...</string>
 
     <string name="client_id">sliw7YAhoPSpADeM1Xhi</string>
     <string name="client_secret">TgAAsIpLw5</string>
