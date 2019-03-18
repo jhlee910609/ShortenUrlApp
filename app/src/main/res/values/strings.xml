@@ -1,15 +1,16 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">단축이</string>
     <string name="clip_label">클립보드 복사</string>
-    <string name="clipboard_copied">[ %s ]이 클립보드에 복사됐습니다.</string>
+    <string name="clipboard_copied">단축 완료!\n[ %s ]이\n클립보드에 복사됐습니다.</string>
     <string name="enter_url">단축할 URL을 입력해주세요!</string>
     <string name="convert">단축 URL 만들기</string>
+    <string name="background" translatable="false">백그라운드에서 동작 중입니다.</string>
     <string name="converted_url">단축 URL</string>
     <string name="error_validate_email">주소를 정확히 입력해주세요.</string>
     <string name="btn_del">삭제</string>
     <string name="url_txt">주소</string>
     <string name="shorten_url_complete">URL 단축 완료</string>
-    <string name="wait_txt">URL을 줄이고 있습니다.</string>
+    <string name="exit" translatable="false" tools:ignore="MissingTranslation">뒤로가기를 한 번 더 누르시면 종료됩니다.</string>>
 
     <string name="client_id">sliw7YAhoPSpADeM1Xhi</string>
     <string name="client_secret">TgAAsIpLw5</string>
