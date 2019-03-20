@@ -27,7 +27,7 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
     private var backPressedTime: Long = 0
 
     override fun onBackPressed() {
-        var tempTime = System.currentTimeMillis()
+        val tempTime = System.currentTimeMillis()
         val intervalTime = tempTime - backPressedTime
 
         if (0 <= intervalTime && finishIntervalTime >= intervalTime) {

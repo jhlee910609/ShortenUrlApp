@@ -1,17 +1,28 @@
 package com.junhee.danchooke.viewmodel
 
+import android.content.Context
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.junhee.danchooke.model.Repository
+import com.junhee.danchooke.dao.UrlRoomDatabase
+import com.junhee.danchooke.model.DBRepositoryImpl
+import com.junhee.danchooke.model.NetworkRepositoryImpl
 import com.junhee.danchooke.utils.SingleLiveEvent
 import com.rengwuxian.materialedittext.validation.METValidator
 import com.rengwuxian.materialedittext.validation.RegexpValidator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class ShortenUrlViewModel(private val repo: Repository) : DisposableViewModel() {
+class ShortenUrlViewModel(
+    private val netRepo: NetworkRepositoryImpl,
+    private var context: Context
+) : DisposableViewModel() {
 
+    val dbRepo: DBRepositoryImpl = DBRepositoryImpl(UrlRoomDatabase.getDatabase(context).urlDao())
+    var allWords = dbRepo.allUrls
+
+
+    // 코드 형태 다시 확인
     private val _shortenUrl = MutableLiveData<String>()
     private val _error = MutableLiveData<String>()
     private val _clickCopyToClipboard = SingleLiveEvent<String>()
@@ -31,16 +42,16 @@ class ShortenUrlViewModel(private val repo: Repository) : DisposableViewModel() 
     }
 
     fun getShortenUrl(url: String) {
-        if (url.length < 1) {
+        if (url.isEmpty()) {
             _error.value = "URL을 입력해주세요."
         } else {
             addDisposable(
-                repo.getShortenUrl(url)
+                netRepo.getShortenUrl(url)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         showResult.value = true
-                        _shortenUrl.value = it.url
+                        _shortenUrl.value = it.shortenUrl
                     }, {
                         _error.value = it.message
                     })

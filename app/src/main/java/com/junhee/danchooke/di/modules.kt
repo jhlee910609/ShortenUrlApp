@@ -50,7 +50,7 @@ val apiModules: Module = module {
     }
 }
 
-val appModules = listOf(apiModules, shortenUrlModules)
+val appModules = listOf(apiModules, shortenUrlModules, databaseModules)
 
 
 

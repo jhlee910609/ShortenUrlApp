@@ -1,11 +1,15 @@
 package com.junhee.danchooke.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.junhee.danchooke.model.Repository
+import com.junhee.danchooke.model.NetworkRepositoryImpl
 
-class ShortenUrlViewModelFactory(private val repo: Repository) : ViewModelProvider.Factory {
+class ShortenUrlViewModelFactory(
+    private val netRepo: NetworkRepositoryImpl,
+    private val context: Context
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return ShortenUrlViewModel(repo) as T
+        return ShortenUrlViewModel(netRepo, context) as T
     }
 }

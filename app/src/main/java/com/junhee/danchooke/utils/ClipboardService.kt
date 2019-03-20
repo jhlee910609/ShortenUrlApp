@@ -15,7 +15,7 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.junhee.danchooke.R
-import com.junhee.danchooke.model.Repository
+import com.junhee.danchooke.model.NetworkRepositoryImpl
 import com.junhee.danchooke.view.ShortenUrlActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -25,8 +25,8 @@ import org.koin.android.ext.android.inject
 class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListener {
 
     private val mFirebase: FirebaseAnalytics by inject()
-    private val repository: Repository by inject()
-    val mManager: ClipboardManager by lazy {
+    private val repository: NetworkRepositoryImpl by inject()
+    private val mManager: ClipboardManager by lazy {
         getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     }
 
@@ -35,7 +35,7 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (INTENT_SERVICE_KEY.equals(intent?.action)) {
+        if (INTENT_SERVICE_KEY == intent?.action) {
             mManager.addPrimaryClipChangedListener(this)
             startForegroundService()
         }
@@ -47,7 +47,7 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                notifyChannel(it.url, url)
+                notifyChannel(it.shortenUrl, url)
             }, {
             })
     }
@@ -98,7 +98,7 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_HIGH
             val mChannel = NotificationChannel(
-                Companion.CHANNEL_ID.toString(), Companion.CHANNEL_NAME, importance
+                CHANNEL_ID.toString(), CHANNEL_NAME, importance
             )
             notiManager.createNotificationChannel(mChannel)
         }
@@ -129,7 +129,7 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
         notiManager.notify(CHANNEL_ID, builder.build())
 
         copyToClipBoard(shortenUrl) {
-            mFirebase.logEvent("from_background", Bundle().apply { putString("url", originUrl) })
+            mFirebase.logEvent("from_background", Bundle().apply { putString("shortenUrl", originUrl) })
         }
     }
 
