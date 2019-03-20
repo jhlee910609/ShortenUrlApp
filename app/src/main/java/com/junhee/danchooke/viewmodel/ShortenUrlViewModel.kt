@@ -8,7 +8,6 @@ import com.junhee.danchooke.dao.UrlRoomDatabase
 import com.junhee.danchooke.model.DBRepositoryImpl
 import com.junhee.danchooke.model.NetworkRepositoryImpl
 import com.junhee.danchooke.utils.SingleLiveEvent
-import com.rengwuxian.materialedittext.validation.METValidator
 import com.rengwuxian.materialedittext.validation.RegexpValidator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -18,7 +17,7 @@ class ShortenUrlViewModel(
     private var context: Context
 ) : DisposableViewModel() {
 
-    val dbRepo: DBRepositoryImpl = DBRepositoryImpl(UrlRoomDatabase.getDatabase(context).urlDao())
+    private val dbRepo: DBRepositoryImpl = DBRepositoryImpl(UrlRoomDatabase.getDatabase(context).urlDao())
     var allWords = dbRepo.allUrls
 
 
@@ -37,7 +36,7 @@ class ShortenUrlViewModel(
     val clickConvert: LiveData<Any> get() = _clickConvert
     val clickDelete: LiveData<Any> get() = _clickDelete
 
-    fun getUrlValidator(errorMessage: String): METValidator {
+    fun getUrlValidator(errorMessage: String): RegexpValidator {
         return RegexpValidator(errorMessage, Patterns.WEB_URL.pattern())
     }
 
@@ -51,7 +50,7 @@ class ShortenUrlViewModel(
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         showResult.value = true
-                        _shortenUrl.value = it.shortenUrl
+                        _shortenUrl.value = it.url
                     }, {
                         _error.value = it.message
                     })

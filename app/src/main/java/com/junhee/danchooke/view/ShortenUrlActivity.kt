@@ -32,7 +32,7 @@ class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
         shortenUrlViewModel.clickConvert.observe(this, Observer {
             shortenUrlViewModel.getShortenUrl(viewDataBinding.urlEditText.text.toString())
             mFirebase.logEvent("click_convert", Bundle().apply {
-                putString("shortenUrl", viewDataBinding.urlEditText.text.toString())
+                putString("url", viewDataBinding.urlEditText.text.toString())
             })
         })
 
@@ -49,14 +49,14 @@ class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
                 ).show()
             }
             mFirebase.logEvent("click_copy", Bundle().apply {
-                putString("shortenUrl", viewDataBinding.urlEditText.text.toString())
+                putString("url", viewDataBinding.urlEditText.text.toString())
             })
         })
 
         shortenUrlViewModel.clickDelete.observe(this, Observer {
             viewDataBinding.urlEditText.setText("", TextView.BufferType.EDITABLE)
             mFirebase.logEvent("click_delete", Bundle().apply {
-                putString("shortenUrl", viewDataBinding.urlEditText.text.toString())
+                putString("url", viewDataBinding.urlEditText.text.toString())
             })
         })
 
@@ -69,7 +69,7 @@ class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
         )
 
         viewDataBinding.shortenUrlViewModel = shortenUrlViewModel
-        viewDataBinding.lifecycleOwner = this@ShortenUrlActivity
+        viewDataBinding.lifecycleOwner = this
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -79,7 +79,7 @@ class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
             viewDataBinding.shortenUrlViewModel?.getShortenUrl(content)
             viewDataBinding.urlEditText.setText(content, TextView.BufferType.EDITABLE)
             mFirebase.logEvent("click_noti", Bundle().apply {
-                putString("shortenUrl", content)
+                putString("url", content)
             })
         }
     }
@@ -101,6 +101,10 @@ class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
         } else {
             startService(intent)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     private fun isForground(context: Context): Boolean {

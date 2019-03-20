@@ -8,7 +8,7 @@ import com.junhee.danchooke.model.ShortenUrl
 
 @Dao
 interface UrlDao {
-    @Query("SELECT * from url_table ORDER by originUrl ASC")
+    @Query("SELECT * from url_table ORDER by orgUrl ASC")
     fun getAllUrls(): LiveData<List<ShortenUrl>>
 
     @Insert

@@ -42,12 +42,12 @@ class ClipboardService : Service(), ClipboardManager.OnPrimaryClipChangedListene
         return START_STICKY
     }
 
-    fun getShortenUrl(url: String) {
+    private fun getShortenUrl(url: String) {
         repository.getShortenUrl(url)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                notifyChannel(it.shortenUrl, url)
+                notifyChannel(it.url, url)
             }, {
             })
     }
