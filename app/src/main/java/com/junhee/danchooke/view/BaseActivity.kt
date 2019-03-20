@@ -30,7 +30,7 @@ abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
         val tempTime = System.currentTimeMillis()
         val intervalTime = tempTime - backPressedTime
 
-        if (0 <= intervalTime && finishIntervalTime >= intervalTime) {
+        if (intervalTime in 0..finishIntervalTime) {
             android.os.Process.killProcess(android.os.Process.myPid())
         } else {
             backPressedTime = tempTime
