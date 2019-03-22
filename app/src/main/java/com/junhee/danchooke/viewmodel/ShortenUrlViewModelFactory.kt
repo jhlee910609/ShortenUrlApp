@@ -1,6 +1,7 @@
 package com.junhee.danchooke.viewmodel
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.junhee.danchooke.model.NetworkRepositoryImpl

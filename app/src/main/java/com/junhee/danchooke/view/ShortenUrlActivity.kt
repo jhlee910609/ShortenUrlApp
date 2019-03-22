@@ -21,26 +21,29 @@ import org.koin.android.ext.android.inject
 class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
 
     override val layoutResourceId: Int = com.junhee.danchooke.R.layout.activity_shorten_url
-    private val shortenUrlViewModelFactory: ShortenUrlViewModelFactory by inject()
-    private val shortenUrlViewModel by lazy {
-        ViewModelProviders.of(this, shortenUrlViewModelFactory).get(ShortenUrlViewModel::class.java)
+    private val mShortenUrlViewModelFactory: ShortenUrlViewModelFactory by inject()
+    private val mShortenUrlViewModel by lazy {
+        ViewModelProviders.of(this, mShortenUrlViewModelFactory).get(ShortenUrlViewModel::class.java)
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        shortenUrlViewModel.clickConvert.observe(this, Observer {
-            shortenUrlViewModel.getShortenUrl(viewDataBinding.urlEditText.text.toString())
+        lifecycle.addObserver(mShortenUrlViewModel)
+
+        mShortenUrlViewModel.clickConvert.observe(this, Observer {
+            mShortenUrlViewModel.getShortenUrl(viewDataBinding.urlEditText.text.toString())
             mFirebase.logEvent("click_convert", Bundle().apply {
                 putString("url", viewDataBinding.urlEditText.text.toString())
             })
         })
 
-        shortenUrlViewModel.error.observe(this, Observer<String> { t ->
+        mShortenUrlViewModel.error.observe(this, Observer<String> { t ->
             Toast.makeText(this@ShortenUrlActivity, t, Toast.LENGTH_LONG).show()
         })
 
-        shortenUrlViewModel.clickCopyToClipboard.observe(this, Observer { clipUrl ->
+        mShortenUrlViewModel.clickCopyToClipboard.observe(this, Observer { clipUrl ->
             copyToClipBoard(clipUrl) {
                 Toast.makeText(
                     this@ShortenUrlActivity,
@@ -53,23 +56,24 @@ class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
             })
         })
 
-        shortenUrlViewModel.clickDelete.observe(this, Observer {
+        mShortenUrlViewModel.clickDelete.observe(this, Observer {
             viewDataBinding.urlEditText.setText("", TextView.BufferType.EDITABLE)
             mFirebase.logEvent("click_delete", Bundle().apply {
                 putString("url", viewDataBinding.urlEditText.text.toString())
             })
         })
 
-        viewDataBinding.urlEditText.addValidator(
-            shortenUrlViewModel.getUrlValidator(
-                getString(
-                    com.junhee.danchooke.R.string.error_validate_email
+        viewDataBinding.apply {
+            urlEditText.addValidator(
+                mShortenUrlViewModel.getUrlValidator(
+                    getString(
+                        com.junhee.danchooke.R.string.error_validate_email
+                    )
                 )
             )
-        )
-
-        viewDataBinding.shortenUrlViewModel = shortenUrlViewModel
-        viewDataBinding.lifecycleOwner = this
+            shortenUrlViewModel = mShortenUrlViewModel
+            lifecycleOwner = this@ShortenUrlActivity
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -104,6 +108,7 @@ class ShortenUrlActivity : BaseActivity<ActivityShortenUrlBinding>() {
     }
 
     override fun onDestroy() {
+        lifecycle.removeObserver(mShortenUrlViewModel)
         super.onDestroy()
     }
 

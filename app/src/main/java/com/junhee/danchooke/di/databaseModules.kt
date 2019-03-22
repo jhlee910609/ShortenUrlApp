@@ -12,7 +12,7 @@ val databaseModules: Module = module {
         UrlRoomDatabase.getDatabase(androidContext()).urlDao()
     }
 
-    factory {
+    single {
         DBRepositoryImpl(get())
     }
 }

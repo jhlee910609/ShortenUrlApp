@@ -4,8 +4,6 @@ import android.content.Context
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.junhee.danchooke.dao.UrlRoomDatabase
-import com.junhee.danchooke.model.DBRepositoryImpl
 import com.junhee.danchooke.model.NetworkRepositoryImpl
 import com.junhee.danchooke.utils.SingleLiveEvent
 import com.rengwuxian.materialedittext.validation.RegexpValidator
@@ -17,10 +15,6 @@ class ShortenUrlViewModel(
     private var context: Context
 ) : DisposableViewModel() {
 
-    private val dbRepo: DBRepositoryImpl = DBRepositoryImpl(UrlRoomDatabase.getDatabase(context).urlDao())
-    var allWords = dbRepo.allUrls
-
-
     // 코드 형태 다시 확인
     private val _shortenUrl = MutableLiveData<String>()
     private val _error = MutableLiveData<String>()
@@ -29,7 +23,6 @@ class ShortenUrlViewModel(
     private val _clickDelete = SingleLiveEvent<Any>()
 
     val showResult = MutableLiveData<Boolean>()
-
     val shortenUrl: LiveData<String> get() = _shortenUrl
     val error: LiveData<String> get() = _error
     val clickCopyToClipboard: LiveData<String> get() = _clickCopyToClipboard
@@ -70,6 +63,5 @@ class ShortenUrlViewModel(
         _clickDelete.call()
         showResult.value = false
         _shortenUrl.value = ""
-
     }
 }

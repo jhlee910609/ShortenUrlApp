@@ -9,6 +9,7 @@
         <variable
                 name="shortenUrlViewModel"
                 type="com.junhee.danchooke.viewmodel.ShortenUrlViewModel"/>
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,7 +41,7 @@
                     android:padding="5dp"
                     android:textSize="17sp"
                     android:onClick="@{() -> shortenUrlViewModel.clickDelete()}"
-                    android:visibility="@{shortenUrlViewModel.showResult ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{safeUnbox(shortenUrlViewModel.showResult) ? View.VISIBLE : View.GONE}"
                     android:id="@+id/btn_del" android:layout_marginRight="2.5dp"/>
 
             <Button
@@ -119,7 +120,7 @@
                 android:id="@+id/visibility_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="@{shortenUrlViewModel.showResult ? View.VISIBLE : View.GONE}"
+                android:visibility="@{safeUnbox(shortenUrlViewModel.showResult)? View.VISIBLE : View.GONE}"
                 app:constraint_referenced_ids="btn_copy_to_clipboard,result_label,result_url"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="parent" app:layout_constraintBottom_toTopOf="parent"/>
